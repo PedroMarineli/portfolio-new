@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>João Silva - Desenvolvedor de Software</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Three.js para o Avatar 3D -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        /* Define a fonte Inter como padrão */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0c1328; /* Cor de fundo principal, um azul bem escuro */
+            color: #e0e0e0; /* Texto principal levemente acinzentado */
+        }
+
+        /* Fundo com gradiente animado para o body */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 10% 20%, rgba(22, 99, 201, 0.15), transparent 30%),
+                        radial-gradient(circle at 90% 80%, rgba(22, 201, 157, 0.15), transparent 35%);
+            z-index: -1;
+            animation: moveGradient 20s infinite alternate;
+        }
+
+        @keyframes moveGradient {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        /* Efeito de borda gradiente para os cards */
+        .gradient-border-card {
+            position: relative;
+            background-color: #1a2238; /* Fundo do card */
+            border-radius: 0.75rem;
+            overflow: hidden;
+            border: 1px solid #303a52;
+            transition: all 0.3s ease;
+        }
+
+        .gradient-border-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            border-color: transparent;
+        }
+
+        .gradient-border-card::before {
+            content: "";
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            z-index: -1;
+            margin: -2px;
+            border-radius: inherit;
+            background: linear-gradient(to right, #38bdf8, #34d399);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gradient-border-card:hover::before {
+            opacity: 1;
+        }
+
+        .gradient-border-card .card-content {
+            background-color: #1a2238;
+            border-radius: 0.75rem;
+            height: 100%;
+            padding: 1.5rem;
+        }
+        
+        /* Spinner de carregamento para a API Gemini */
+        .loader {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #FFF;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Cabeçalho e Navegação -->
+    <header class="bg-transparent backdrop-blur-sm fixed top-0 left-0 right-0 z-50 border-b border-white/10">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="#" class="text-2xl font-bold text-white tracking-wider">JS.dev</a>
+                <nav class="hidden md:flex items-center space-x-6">
+                    <a href="#about" class="text-gray-300 hover:text-white transition-colors">Sobre</a>
+                    <a href="#services" class="text-gray-300 hover:text-white transition-colors">Serviços</a>
+                    <a href="#projects" class="text-gray-300 hover:text-white transition-colors">Projetos</a>
+                    <a href="#contact" class="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white font-semibold py-2 px-5 rounded-lg transition-all transform hover:scale-105">
+                        Contato
+                    </a>
+                </nav>
+                <button id="mobile-menu-button" class="md:hidden text-gray-300 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
+        <!-- Menu Móvel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-gray-900/90 backdrop-blur-lg">
+            <a href="#about" class="block py-3 px-6 text-base text-gray-300 hover:bg-white/5">Sobre</a>
+            <a href="#services" class="block py-3 px-6 text-base text-gray-300 hover:bg-white/5">Serviços</a>
+            <a href="#projects" class="block py-3 px-6 text-base text-gray-300 hover:bg-white/5">Projetos</a>
+            <a href="#contact" class="block py-3 px-6 text-base text-gray-300 hover:bg-white/5">Contato</a>
+        </div>
+    </header>
+
+    <main class="pt-24">
+        <!-- Seção Hero -->
+        <section id="hero" class="container mx-auto px-6 py-16 md:py-24">
+            <div class="flex flex-col-reverse md:flex-row items-center gap-12">
+                <div class="md:w-3/5 text-center md:text-left">
+                    <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight">
+                        Transformando Ideias em
+                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-emerald-400">
+                            Soluções Digitais
+                        </span>
+                    </h1>
+                    <p class="mt-6 max-w-xl text-lg text-gray-300">
+                        Desenvolvedor de software focado em criar aplicações web robustas, escaláveis e com experiências de usuário memoráveis.
+                    </p>
+                    <div class="mt-10 flex flex-col sm:flex-row justify-center md:justify-start gap-4">
+                        <a href="#projects" class="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white font-bold py-3 px-8 rounded-lg transition-all transform hover:scale-105 text-center">
+                            Meus Projetos
+                        </a>
+                        <a href="#contact" class="border-2 border-gray-600 hover:border-gray-400 text-gray-300 hover:text-white font-bold py-3 px-8 rounded-lg transition-colors text-center">
+                            Fale Comigo
+                        </a>
+                    </div>
+                </div>
+                <!-- Container do Avatar 3D -->
+                <div class="md:w-2/5 flex justify-center">
+                    <div id="avatar-container" class="w-64 h-64 md:w-80 md:h-80">
+                        <canvas id="avatar-canvas" class="w-full h-full"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Sobre Mim -->
+        <section id="about" class="py-20">
+            <div class="container mx-auto px-6">
+                 <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white">Sobre Mim</h2>
+                    <p class="text-lg text-sky-400 mt-2">Um pouco da minha jornada no mundo do código</p>
+                </div>
+                <div class="max-w-4xl mx-auto text-gray-300 text-lg space-y-6 text-center bg-white/5 p-8 rounded-lg backdrop-blur-sm border border-white/10">
+                    <p>
+                        Olá! Sou João Silva, um entusiasta da tecnologia com uma paixão por resolver problemas através do desenvolvimento de software. Minha jornada começou com a curiosidade de entender como a web funcionava, e rapidamente se transformou em uma carreira dedicada a construir aplicações web de alta qualidade.
+                    </p>
+                    <p>
+                        Com experiência em todo o ciclo de vida do desenvolvimento, da concepção à implantação, sou proficiente em criar tanto o frontend intuitivo quanto o backend poderoso que o sustenta. Acredito na escrita de código limpo, testável e na colaboração para entregar produtos que realmente fazem a diferença.
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Seção "O que eu faço" (Serviços) -->
+        <section id="services" class="py-20 bg-black/10">
+             <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white">O que eu faço</h2>
+                    <p class="text-lg text-sky-400 mt-2">Minhas principais áreas de expertise</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Card de Serviço 1 -->
+                    <div class="gradient-border-card">
+                       <div class="card-content flex flex-col items-center text-center">
+                            <div class="p-4 bg-sky-500/10 rounded-full mb-4 border border-sky-500/30">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">Desenvolvimento Frontend</h3>
+                            <p class="text-gray-400">Crio interfaces de usuário interativas e responsivas com tecnologias modernas como React e Vue, focando em usabilidade e performance.</p>
+                       </div>
+                    </div>
+                    <!-- Card de Serviço 2 -->
+                     <div class="gradient-border-card">
+                       <div class="card-content flex flex-col items-center text-center">
+                            <div class="p-4 bg-emerald-500/10 rounded-full mb-4 border border-emerald-500/30">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7" /></svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">Desenvolvimento Backend</h3>
+                            <p class="text-gray-400">Construo APIs RESTful robustas e escaláveis com Node.js e Python, garantindo a segurança e a integridade dos dados.</p>
+                       </div>
+                    </div>
+                    <!-- Card de Serviço 3 -->
+                     <div class="gradient-border-card">
+                       <div class="card-content flex flex-col items-center text-center">
+                            <div class="p-4 bg-purple-500/10 rounded-full mb-4 border border-purple-500/30">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z" /></svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">Aplicações Full-Stack</h3>
+                            <p class="text-gray-400">Desenvolvo soluções completas, do design à implantação, integrando frontend e backend para criar produtos coesos e funcionais.</p>
+                       </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Projetos -->
+        <section id="projects" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white">Projetos em Destaque</h2>
+                    <p class="text-lg text-sky-400 mt-2">Uma seleção dos meus melhores trabalhos</p>
+                </div>
+                
+                <div class="space-y-12">
+                    <!-- Projeto 1 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div class="p-4 rounded-lg bg-white/5 border border-white/10">
+                            <img src="https://placehold.co/600x400/0c1328/38bdf8?text=Projeto+1" alt="Imagem do Projeto 1" class="w-full h-auto object-cover rounded-md">
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">Plataforma de E-commerce</h3>
+                            <p class="mt-4 text-gray-300">Uma loja virtual completa com carrinho de compras, checkout e painel de administração de produtos, construída para performance e escalabilidade.</p>
+                            <div class="flex flex-wrap gap-3 mt-4">
+                                <span class="bg-sky-900/50 text-sky-300 text-sm font-semibold px-3 py-1 rounded-full">React</span>
+                                <span class="bg-sky-900/50 text-sky-300 text-sm font-semibold px-3 py-1 rounded-full">Node.js</span>
+                                <span class="bg-sky-900/50 text-sky-300 text-sm font-semibold px-3 py-1 rounded-full">MongoDB</span>
+                            </div>
+                            <div class="flex gap-4 mt-6">
+                                <a href="#" target="_blank" class="text-sky-400 hover:text-sky-300 font-semibold">Ver no GitHub →</a>
+                                <a href="#" target="_blank" class="text-emerald-400 hover:text-emerald-300 font-semibold">Demo ao Vivo →</a>
+                            </div>
+                        </div>
+                    </div>
+                     <!-- Projeto 2 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div class="md:order-2 p-4 rounded-lg bg-white/5 border border-white/10">
+                            <img src="https://placehold.co/600x400/0c1328/34d399?text=Projeto+2" alt="Imagem do Projeto 2" class="w-full h-auto object-cover rounded-md">
+                        </div>
+                        <div class="md:order-1">
+                            <h3 class="text-2xl font-bold text-white">App de Gerenciamento de Tarefas</h3>
+                            <p class="mt-4 text-gray-300">Aplicação para organizar tarefas com drag-and-drop, prazos e categorização, utilizando dados em tempo real com Firebase.</p>
+                            <div class="flex flex-wrap gap-3 mt-4">
+                                <span class="bg-sky-900/50 text-sky-300 text-sm font-semibold px-3 py-1 rounded-full">Vue.js</span>
+                                <span class="bg-sky-900/50 text-sky-300 text-sm font-semibold px-3 py-1 rounded-full">Firebase</span>
+                                <span class="bg-sky-900/50 text-sky-300 text-sm font-semibold px-3 py-1 rounded-full">Tailwind CSS</span>
+                            </div>
+                            <div class="flex gap-4 mt-6">
+                                <a href="#" target="_blank" class="text-sky-400 hover:text-sky-300 font-semibold">Ver no GitHub →</a>
+                                <a href="#" target="_blank" class="text-emerald-400 hover:text-emerald-300 font-semibold">Demo ao Vivo →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Contato com Gemini -->
+        <section id="contact" class="py-20 bg-black/10">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white">Vamos Conversar</h2>
+                    <p class="text-lg text-sky-400 mt-2">Envie sua ideia, projeto ou um simples "olá".</p>
+                </div>
+                <div class="max-w-2xl mx-auto bg-white/5 p-8 rounded-lg backdrop-blur-sm border border-white/10">
+                    <form id="contact-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="name" class="text-sm font-medium text-gray-400">Nome</label>
+                                <input type="text" id="name" name="name" placeholder="Seu Nome" required class="mt-2 w-full bg-gray-900/50 border border-gray-600 rounded-lg py-3 px-4 text-gray-200 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-colors">
+                            </div>
+                            <div>
+                                <label for="email" class="text-sm font-medium text-gray-400">E-mail</label>
+                                <input type="email" id="email" name="email" placeholder="Seu E-mail" required class="mt-2 w-full bg-gray-900/50 border border-gray-600 rounded-lg py-3 px-4 text-gray-200 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-colors">
+                            </div>
+                        </div>
+                        
+                        <!-- Funcionalidade Gemini -->
+                        <div class="bg-gray-900/50 border border-gray-700 rounded-lg p-4 space-y-3">
+                             <label for="gemini-prompt" class="text-sm font-medium text-gray-300">Assistente de IA</label>
+                             <p class="text-xs text-gray-400">Sem ideias? Digite um tópico (ex: "vaga de frontend") e deixe a IA criar um rascunho para você.</p>
+                             <div class="flex gap-2">
+                                <input type="text" id="gemini-prompt" name="gemini-prompt" placeholder="Tópico da mensagem..." class="flex-grow w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-4 text-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-colors">
+                                <button type="button" id="gemini-generate-btn" class="flex-shrink-0 flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <span id="gemini-btn-text" class="hidden sm:inline">Gerar</span>
+                                    <span id="gemini-loader" class="loader hidden"></span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" /></svg>
+                                </button>
+                             </div>
+                        </div>
+
+                        <div>
+                            <label for="message" class="text-sm font-medium text-gray-400">Sua Mensagem</label>
+                            <textarea id="message" name="message" rows="6" placeholder="A IA irá gerar uma sugestão de mensagem aqui..." required class="mt-2 w-full bg-gray-900/50 border border-gray-600 rounded-lg py-3 px-4 text-gray-200 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-colors"></textarea>
+                        </div>
+                        <div class="text-center pt-4">
+                            <button type="submit" class="w-full md:w-auto bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white font-bold py-3 px-12 rounded-lg transition-all transform hover:scale-105">
+                                Enviar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="border-t border-white/10">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-400">
+             <div class="flex justify-center mb-4 space-x-6">
+                <a href="https://github.com/seu-usuario" target="_blank" class="hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.168 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd" /></svg>
+                </a>
+                <a href="https://linkedin.com/in/seu-usuario" target="_blank" class="hover:text-white transition-colors">
+                   <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                </a>
+            </div>
+            <p>&copy; 2025 João Silva. Feito com <span class="text-emerald-400">♥</span> e código.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- Scripts do Menu e Avatar 3D (Minificados para economizar espaço) ---
+        document.getElementById('mobile-menu-button').addEventListener('click',()=>document.getElementById('mobile-menu').classList.toggle('hidden'));document.querySelectorAll('#mobile-menu a').forEach(a=>{a.addEventListener('click',()=>document.getElementById('mobile-menu').classList.add('hidden'))});const avatarContainer=document.getElementById('avatar-container'),avatarCanvas=document.getElementById('avatar-canvas'),scene=new THREE.Scene,camera=new THREE.PerspectiveCamera(50,avatarContainer.clientWidth/avatarContainer.clientHeight,.1,1e3);camera.position.z=3;const renderer=new THREE.WebGLRenderer({canvas:avatarCanvas,antialias:!0,alpha:!0});renderer.setSize(avatarContainer.clientWidth,avatarContainer.clientHeight),renderer.setPixelRatio(window.devicePixelRatio);const ambientLight=new THREE.AmbientLight(16777215,.7);scene.add(ambientLight);const directionalLight=new THREE.DirectionalLight(16777215,1);directionalLight.position.set(5,5,5),scene.add(directionalLight);const avatarGroup=new THREE.Group;scene.add(avatarGroup);const skinMaterial=new THREE.MeshStandardMaterial({color:16767916}),hairMaterial=new THREE.MeshStandardMaterial({color:1842204}),eyeMaterial=new THREE.MeshStandardMaterial({color:4302582}),glassesMaterial=new THREE.MeshStandardMaterial({color:1118481,roughness:.1}),head=new THREE.Mesh(new THREE.SphereGeometry(1,32,32),skinMaterial);avatarGroup.add(head);const hair=new THREE.Mesh(new THREE.SphereGeometry(1.05,32,32,0,2*Math.PI,0,Math.PI/2),hairMaterial);hair.position.y=.1,avatarGroup.add(hair);const leftEye=new THREE.Mesh(new THREE.SphereGeometry(.1,16,16),eyeMaterial);leftEye.position.set(-.35,.15,.85),avatarGroup.add(leftEye);const rightEye=new THREE.Mesh(new THREE.SphereGeometry(.1,16,16),eyeMaterial);rightEye.position.set(.35,.15,.85),avatarGroup.add(rightEye);const glassesGroup=new THREE.Group,leftLens=new THREE.Mesh(new THREE.TorusGeometry(.25,.03,16,50),glassesMaterial);leftLens.position.set(-.35,.15,.9),glassesGroup.add(leftLens);const rightLens=new THREE.Mesh(new THREE.TorusGeometry(.25,.03,16,50),glassesMaterial);rightLens.position.set(.35,.15,.9),glassesGroup.add(rightLens);const bridge=new THREE.Mesh(new THREE.BoxGeometry(.15,.05,.05),glassesMaterial);bridge.position.set(0,.15,.9),glassesGroup.add(bridge);const leftArm=new THREE.Mesh(new THREE.BoxGeometry(.03,.03,.7),glassesMaterial);leftArm.position.set(-.6,.15,.55),glassesGroup.add(leftArm);const rightArm=new THREE.Mesh(new THREE.BoxGeometry(.03,.03,.7),glassesMaterial);rightArm.position.set(.6,.15,.55),glassesGroup.add(rightArm);avatarGroup.add(glassesGroup);let mouse=new THREE.Vector2;window.addEventListener("mousemove",e=>{mouse.x=e.clientX/window.innerWidth*2-1,mouse.y=-(e.clientY/window.innerHeight)*2+1},!1),window.addEventListener("resize",()=>{camera.aspect=avatarContainer.clientWidth/avatarContainer.clientHeight,camera.updateProjectionMatrix(),renderer.setSize(avatarContainer.clientWidth,avatarContainer.clientHeight)},!1);function animateAvatar(){requestAnimationFrame(animateAvatar),avatarGroup.rotation.y+=(.5*mouse.x-avatarGroup.rotation.y)*.05,avatarGroup.rotation.x+=(-.2*mouse.y-avatarGroup.rotation.x)*.05,renderer.render(scene,camera)}animateAvatar();
+    </script>
+
+    <!-- Script para a API do Gemini -->
+    <script>
+        const geminiBtn = document.getElementById('gemini-generate-btn');
+        const geminiPromptInput = document.getElementById('gemini-prompt');
+        const messageTextarea = document.getElementById('message');
+        const loader = document.getElementById('gemini-loader');
+        const btnText = document.getElementById('gemini-btn-text');
+        
+        async function generateContactMessage() {
+            geminiBtn.disabled = true;
+            loader.classList.remove('hidden');
+            if (btnText) btnText.classList.add('hidden');
+            messageTextarea.placeholder = "Gerando sugestão com IA...";
+            messageTextarea.value = "";
+
+            const userPrompt = geminiPromptInput.value;
+            if (!userPrompt) {
+                messageTextarea.placeholder = "Por favor, insira um tópico para a mensagem.";
+                resetButtonState();
+                return;
+            }
+
+            const prompt = `Você é um assistente de escrita profissional. Seu objetivo é ajudar um visitante a entrar em contato com um desenvolvedor de software chamado João Silva. Baseado no seguinte tópico fornecido pelo visitante: "${userPrompt}", escreva uma mensagem de contato para ser usada em um formulário. A mensagem deve ser profissional, clara, concisa e ir direto ao ponto. Termine com uma chamada para ação (ex: "Gostaria de agendar uma breve conversa para discutir como podemos colaborar."). NÃO inclua saudações (como "Prezado João,") nem encerramentos (como "Atenciosamente,"), pois o formulário já tem campos para nome e email. Apenas o corpo da mensagem.`;
+
+            const payload = { contents: [{ parts: [{ text: prompt }] }] };
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) throw new Error(`Erro na API: ${response.statusText}`);
+                
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    messageTextarea.value = text.trim();
+                } else {
+                    messageTextarea.value = "Não foi possível gerar uma mensagem. Tente novamente.";
+                }
+            } catch (error) {
+                console.error("Erro ao chamar a API Gemini:", error);
+                messageTextarea.value = "Ocorreu um erro ao se comunicar com a IA. Verifique o console para mais detalhes.";
+            } finally {
+                resetButtonState();
+            }
+        }
+
+        function resetButtonState() {
+            geminiBtn.disabled = false;
+            loader.classList.add('hidden');
+            if(btnText) btnText.classList.remove('hidden');
+            messageTextarea.placeholder = "A IA irá gerar uma sugestão de mensagem aqui...";
+        }
+
+        geminiBtn.addEventListener('click', generateContactMessage);
+        
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Formulário enviado! (Esta é uma demonstração)');
+        });
+    </script>
+</body>
+</html>
