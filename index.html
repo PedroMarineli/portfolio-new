@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>João Silva - Desenvolvedor de Software</title>
+    <title>Portfólio</title>
     
+    <script type="module" src="avatar.js"></script>
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -16,89 +18,8 @@
     <!-- Three.js para o Avatar 3D -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-    <style>
-        /* Define a fonte Inter como padrão */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0c1328; /* Cor de fundo principal, um azul bem escuro */
-            color: #e0e0e0; /* Texto principal levemente acinzentado */
-        }
-
-        /* Fundo com gradiente animado para o body */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 10% 20%, rgba(22, 99, 201, 0.15), transparent 30%),
-                        radial-gradient(circle at 90% 80%, rgba(22, 201, 157, 0.15), transparent 35%);
-            z-index: -1;
-            animation: moveGradient 20s infinite alternate;
-        }
-
-        @keyframes moveGradient {
-            0% { background-position: 0% 0%; }
-            100% { background-position: 100% 100%; }
-        }
-
-        /* Efeito de borda gradiente para os cards */
-        .gradient-border-card {
-            position: relative;
-            background-color: #1a2238; /* Fundo do card */
-            border-radius: 0.75rem;
-            overflow: hidden;
-            border: 1px solid #303a52;
-            transition: all 0.3s ease;
-        }
-
-        .gradient-border-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            border-color: transparent;
-        }
-
-        .gradient-border-card::before {
-            content: "";
-            position: absolute;
-            top: 0; right: 0; bottom: 0; left: 0;
-            z-index: -1;
-            margin: -2px;
-            border-radius: inherit;
-            background: linear-gradient(to right, #38bdf8, #34d399);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .gradient-border-card:hover::before {
-            opacity: 1;
-        }
-
-        .gradient-border-card .card-content {
-            background-color: #1a2238;
-            border-radius: 0.75rem;
-            height: 100%;
-            padding: 1.5rem;
-        }
-        
-        /* Spinner de carregamento para a API Gemini */
-        .loader {
-            width: 20px;
-            height: 20px;
-            border: 2px solid #FFF;
-            border-bottom-color: transparent;
-            border-radius: 50%;
-            display: inline-block;
-            box-sizing: border-box;
-            animation: rotation 1s linear infinite;
-        }
-
-        @keyframes rotation {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+    <!-- .CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="antialiased">
 
@@ -106,7 +27,7 @@
     <header class="bg-transparent backdrop-blur-sm fixed top-0 left-0 right-0 z-50 border-b border-white/10">
         <div class="container mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
-                <a href="#" class="text-2xl font-bold text-white tracking-wider">JS.dev</a>
+                <a href="#" class="text-2xl font-bold text-white tracking-wider">Marineli.dev</a>
                 <nav class="hidden md:flex items-center space-x-6">
                     <a href="#about" class="text-gray-300 hover:text-white transition-colors">Sobre</a>
                     <a href="#services" class="text-gray-300 hover:text-white transition-colors">Serviços</a>
@@ -271,54 +192,6 @@
                 </div>
             </div>
         </section>
-
-        <!-- Seção de Contato com Gemini -->
-        <section id="contact" class="py-20 bg-black/10">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold text-white">Vamos Conversar</h2>
-                    <p class="text-lg text-sky-400 mt-2">Envie sua ideia, projeto ou um simples "olá".</p>
-                </div>
-                <div class="max-w-2xl mx-auto bg-white/5 p-8 rounded-lg backdrop-blur-sm border border-white/10">
-                    <form id="contact-form" class="space-y-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label for="name" class="text-sm font-medium text-gray-400">Nome</label>
-                                <input type="text" id="name" name="name" placeholder="Seu Nome" required class="mt-2 w-full bg-gray-900/50 border border-gray-600 rounded-lg py-3 px-4 text-gray-200 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-colors">
-                            </div>
-                            <div>
-                                <label for="email" class="text-sm font-medium text-gray-400">E-mail</label>
-                                <input type="email" id="email" name="email" placeholder="Seu E-mail" required class="mt-2 w-full bg-gray-900/50 border border-gray-600 rounded-lg py-3 px-4 text-gray-200 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-colors">
-                            </div>
-                        </div>
-                        
-                        <!-- Funcionalidade Gemini -->
-                        <div class="bg-gray-900/50 border border-gray-700 rounded-lg p-4 space-y-3">
-                             <label for="gemini-prompt" class="text-sm font-medium text-gray-300">Assistente de IA</label>
-                             <p class="text-xs text-gray-400">Sem ideias? Digite um tópico (ex: "vaga de frontend") e deixe a IA criar um rascunho para você.</p>
-                             <div class="flex gap-2">
-                                <input type="text" id="gemini-prompt" name="gemini-prompt" placeholder="Tópico da mensagem..." class="flex-grow w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-4 text-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-colors">
-                                <button type="button" id="gemini-generate-btn" class="flex-shrink-0 flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                                    <span id="gemini-btn-text" class="hidden sm:inline">Gerar</span>
-                                    <span id="gemini-loader" class="loader hidden"></span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" /></svg>
-                                </button>
-                             </div>
-                        </div>
-
-                        <div>
-                            <label for="message" class="text-sm font-medium text-gray-400">Sua Mensagem</label>
-                            <textarea id="message" name="message" rows="6" placeholder="A IA irá gerar uma sugestão de mensagem aqui..." required class="mt-2 w-full bg-gray-900/50 border border-gray-600 rounded-lg py-3 px-4 text-gray-200 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-colors"></textarea>
-                        </div>
-                        <div class="text-center pt-4">
-                            <button type="submit" class="w-full md:w-auto bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white font-bold py-3 px-12 rounded-lg transition-all transform hover:scale-105">
-                                Enviar
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </section>
     </main>
 
     <!-- Rodapé -->
@@ -332,81 +205,8 @@
                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
                 </a>
             </div>
-            <p>&copy; 2025 João Silva. Feito com <span class="text-emerald-400">♥</span> e código.</p>
+            <p>&copy; 2025 Pedro Marineli. Feito com <span class="text-emerald-400">♥</span> e código.</p>
         </div>
-    </footer>
-
-    <script>
-        // --- Scripts do Menu e Avatar 3D (Minificados para economizar espaço) ---
-        document.getElementById('mobile-menu-button').addEventListener('click',()=>document.getElementById('mobile-menu').classList.toggle('hidden'));document.querySelectorAll('#mobile-menu a').forEach(a=>{a.addEventListener('click',()=>document.getElementById('mobile-menu').classList.add('hidden'))});const avatarContainer=document.getElementById('avatar-container'),avatarCanvas=document.getElementById('avatar-canvas'),scene=new THREE.Scene,camera=new THREE.PerspectiveCamera(50,avatarContainer.clientWidth/avatarContainer.clientHeight,.1,1e3);camera.position.z=3;const renderer=new THREE.WebGLRenderer({canvas:avatarCanvas,antialias:!0,alpha:!0});renderer.setSize(avatarContainer.clientWidth,avatarContainer.clientHeight),renderer.setPixelRatio(window.devicePixelRatio);const ambientLight=new THREE.AmbientLight(16777215,.7);scene.add(ambientLight);const directionalLight=new THREE.DirectionalLight(16777215,1);directionalLight.position.set(5,5,5),scene.add(directionalLight);const avatarGroup=new THREE.Group;scene.add(avatarGroup);const skinMaterial=new THREE.MeshStandardMaterial({color:16767916}),hairMaterial=new THREE.MeshStandardMaterial({color:1842204}),eyeMaterial=new THREE.MeshStandardMaterial({color:4302582}),glassesMaterial=new THREE.MeshStandardMaterial({color:1118481,roughness:.1}),head=new THREE.Mesh(new THREE.SphereGeometry(1,32,32),skinMaterial);avatarGroup.add(head);const hair=new THREE.Mesh(new THREE.SphereGeometry(1.05,32,32,0,2*Math.PI,0,Math.PI/2),hairMaterial);hair.position.y=.1,avatarGroup.add(hair);const leftEye=new THREE.Mesh(new THREE.SphereGeometry(.1,16,16),eyeMaterial);leftEye.position.set(-.35,.15,.85),avatarGroup.add(leftEye);const rightEye=new THREE.Mesh(new THREE.SphereGeometry(.1,16,16),eyeMaterial);rightEye.position.set(.35,.15,.85),avatarGroup.add(rightEye);const glassesGroup=new THREE.Group,leftLens=new THREE.Mesh(new THREE.TorusGeometry(.25,.03,16,50),glassesMaterial);leftLens.position.set(-.35,.15,.9),glassesGroup.add(leftLens);const rightLens=new THREE.Mesh(new THREE.TorusGeometry(.25,.03,16,50),glassesMaterial);rightLens.position.set(.35,.15,.9),glassesGroup.add(rightLens);const bridge=new THREE.Mesh(new THREE.BoxGeometry(.15,.05,.05),glassesMaterial);bridge.position.set(0,.15,.9),glassesGroup.add(bridge);const leftArm=new THREE.Mesh(new THREE.BoxGeometry(.03,.03,.7),glassesMaterial);leftArm.position.set(-.6,.15,.55),glassesGroup.add(leftArm);const rightArm=new THREE.Mesh(new THREE.BoxGeometry(.03,.03,.7),glassesMaterial);rightArm.position.set(.6,.15,.55),glassesGroup.add(rightArm);avatarGroup.add(glassesGroup);let mouse=new THREE.Vector2;window.addEventListener("mousemove",e=>{mouse.x=e.clientX/window.innerWidth*2-1,mouse.y=-(e.clientY/window.innerHeight)*2+1},!1),window.addEventListener("resize",()=>{camera.aspect=avatarContainer.clientWidth/avatarContainer.clientHeight,camera.updateProjectionMatrix(),renderer.setSize(avatarContainer.clientWidth,avatarContainer.clientHeight)},!1);function animateAvatar(){requestAnimationFrame(animateAvatar),avatarGroup.rotation.y+=(.5*mouse.x-avatarGroup.rotation.y)*.05,avatarGroup.rotation.x+=(-.2*mouse.y-avatarGroup.rotation.x)*.05,renderer.render(scene,camera)}animateAvatar();
-    </script>
-
-    <!-- Script para a API do Gemini -->
-    <script>
-        const geminiBtn = document.getElementById('gemini-generate-btn');
-        const geminiPromptInput = document.getElementById('gemini-prompt');
-        const messageTextarea = document.getElementById('message');
-        const loader = document.getElementById('gemini-loader');
-        const btnText = document.getElementById('gemini-btn-text');
-        
-        async function generateContactMessage() {
-            geminiBtn.disabled = true;
-            loader.classList.remove('hidden');
-            if (btnText) btnText.classList.add('hidden');
-            messageTextarea.placeholder = "Gerando sugestão com IA...";
-            messageTextarea.value = "";
-
-            const userPrompt = geminiPromptInput.value;
-            if (!userPrompt) {
-                messageTextarea.placeholder = "Por favor, insira um tópico para a mensagem.";
-                resetButtonState();
-                return;
-            }
-
-            const prompt = `Você é um assistente de escrita profissional. Seu objetivo é ajudar um visitante a entrar em contato com um desenvolvedor de software chamado João Silva. Baseado no seguinte tópico fornecido pelo visitante: "${userPrompt}", escreva uma mensagem de contato para ser usada em um formulário. A mensagem deve ser profissional, clara, concisa e ir direto ao ponto. Termine com uma chamada para ação (ex: "Gostaria de agendar uma breve conversa para discutir como podemos colaborar."). NÃO inclua saudações (como "Prezado João,") nem encerramentos (como "Atenciosamente,"), pois o formulário já tem campos para nome e email. Apenas o corpo da mensagem.`;
-
-            const payload = { contents: [{ parts: [{ text: prompt }] }] };
-            const apiKey = "";
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) throw new Error(`Erro na API: ${response.statusText}`);
-                
-                const result = await response.json();
-                
-                if (result.candidates && result.candidates.length > 0) {
-                    const text = result.candidates[0].content.parts[0].text;
-                    messageTextarea.value = text.trim();
-                } else {
-                    messageTextarea.value = "Não foi possível gerar uma mensagem. Tente novamente.";
-                }
-            } catch (error) {
-                console.error("Erro ao chamar a API Gemini:", error);
-                messageTextarea.value = "Ocorreu um erro ao se comunicar com a IA. Verifique o console para mais detalhes.";
-            } finally {
-                resetButtonState();
-            }
-        }
-
-        function resetButtonState() {
-            geminiBtn.disabled = false;
-            loader.classList.add('hidden');
-            if(btnText) btnText.classList.remove('hidden');
-            messageTextarea.placeholder = "A IA irá gerar uma sugestão de mensagem aqui...";
-        }
-
-        geminiBtn.addEventListener('click', generateContactMessage);
-        
-        document.getElementById('contact-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Formulário enviado! (Esta é uma demonstração)');
-        });
-    </script>
+    </footer>   
 </body>
 </html>

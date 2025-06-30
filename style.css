@@ -1,0 +1,81 @@
+ /* Define a fonte Inter como padrão */
+ body {
+    font-family: 'Inter', sans-serif;
+    background-color: #0c1328; /* Cor de fundo principal, um azul bem escuro */
+    color: #e0e0e0; /* Texto principal levemente acinzentado */
+}
+
+/* Fundo com gradiente animado para o body */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 10% 20%, rgba(22, 99, 201, 0.15), transparent 30%),
+                radial-gradient(circle at 90% 80%, rgba(22, 201, 157, 0.15), transparent 35%);
+    z-index: -1;
+    animation: moveGradient 20s infinite alternate;
+}
+
+@keyframes moveGradient {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+
+/* Efeito de borda gradiente para os cards */
+.gradient-border-card {
+    position: relative;
+    background-color: #1a2238; /* Fundo do card */
+    border-radius: 0.75rem;
+    overflow: hidden;
+    border: 1px solid #303a52;
+    transition: all 0.3s ease;
+}
+
+.gradient-border-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    border-color: transparent;
+}
+
+.gradient-border-card::before {
+    content: "";
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    z-index: -1;
+    margin: -2px;
+    border-radius: inherit;
+    background: linear-gradient(to right, #38bdf8, #34d399);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.gradient-border-card:hover::before {
+    opacity: 1;
+}
+
+.gradient-border-card .card-content {
+    background-color: #1a2238;
+    border-radius: 0.75rem;
+    height: 100%;
+    padding: 1.5rem;
+}
+
+/* Spinner de carregamento para a API Gemini */
+.loader {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #FFF;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
