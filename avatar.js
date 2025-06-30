@@ -1,51 +1,27 @@
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import SplineLoader from '@splinetool/loader';
+// A importação foi alterada para um URL completo para resolver o erro do módulo.
+import { Application } from 'https://unpkg.com/@splinetool/runtime@1.0.9/build/runtime.js';
 
-// camera
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 70, 100000);
-camera.position.set(189.48, 6.01, 72.34);
-camera.quaternion.setFromEuler(new THREE.Euler(-0.17, 1.12, 0.15));
+// --- Lógica do menu (mantida do código original) ---
+document.getElementById('mobile-menu-button').addEventListener('click', () => {
+    document.getElementById('mobile-menu').classList.toggle('hidden');
+});
+document.querySelectorAll('#mobile-menu a').forEach(a => {
+    a.addEventListener('click', () => document.getElementById('mobile-menu').classList.add('hidden'));
+});
 
-// scene
-const scene = new THREE.Scene();
+// --- Lógica do Avatar 3D (Método Simplificado) ---
 
-// spline scene
-const loader = new SplineLoader();
-loader.load(
-  'https://prod.spline.design/ztndZT8fJ89p7PFr/scene.splinecode',
-  (splineScene) => {
-    scene.add(splineScene);
-  }
-);
+// Encontra o elemento canvas no seu HTML
+const canvas = document.getElementById('avatar-canvas');
 
-// renderer
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setAnimationLoop(animate);
-document.body.appendChild(renderer.domElement);
+// Inicia a aplicação do Spline diretamente no canvas
+const spline = new Application(canvas);
 
-// scene settings
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFShadowMap;
-
-scene.background = new THREE.Color('#121314');
-renderer.setClearAlpha(0);
-
-// orbit controls
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.dampingFactor = 0.125;
-
-window.addEventListener('resize', onWindowResize);
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-function animate(time) {
-  controls.update();
-  renderer.render(scene, camera);
-}
-        
+// Carrega a sua cena do Spline e, em caso de sucesso, exibe uma mensagem na consola.
+spline.load('https://prod.spline.design/ztndZT8fJ89p7PFr/scene.splinecode')
+    .then(() => {
+        console.log('Cena do Spline carregada com sucesso!');
+    })
+    .catch((error) => {
+        console.error('Ocorreu um erro ao carregar a cena do Spline:', error);
+    });
